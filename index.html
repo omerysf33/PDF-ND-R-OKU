@@ -3,164 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>345 Deneme Portalı</title>
+    <title>345 PDF Portalı</title>
+    
     <style>
         :root {
-            --primary-color: #6366f1;
-            --bg-color: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-main: #1f2937;
+            --primary: #6366f1;
+            --bg: #f8fafc;
+            --card: #ffffff;
+            --text: #334155;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Segoe UI', sans-serif;
             margin: 0;
-            background-color: var(--bg-color);
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             flex-direction: column;
             height: 100vh;
         }
 
-        .content-area { flex: 1; padding: 20px; overflow-y: auto; padding-bottom: 90px; }
-        section { display: none; animation: fadeIn 0.3s; }
-        section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 16px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        .container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            padding-bottom: 100px;
         }
 
-        .pdf-list-item {
+        section { display: none; }
+        section.active { display: block; }
+
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .pdf-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
-            border-bottom: 1px solid #eee;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
         }
 
-        /* Buton Stilleri */
-        button {
+        .btn-download {
+            background: var(--primary);
+            color: white;
             border: none;
-            border-radius: 10px;
             padding: 12px 20px;
+            border-radius: 10px;
             font-weight: 600;
             cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .btn-download-action {
-            background: var(--primary-color);
-            color: white;
             width: 100%;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
+            margin-top: 10px;
         }
 
-        .btn-download-action:hover { background: #4f46e5; }
-
-        /* Alt Menü */
         .nav-bar {
             position: fixed;
             bottom: 0;
             width: 100%;
             background: white;
             display: flex;
-            padding: 12px 0;
-            border-top: 1px solid #e5e7eb;
+            border-top: 1px solid #e2e8f0;
+            padding: 10px 0;
         }
 
-        .nav-btn { flex: 1; background: none; color: #9ca3af; display: flex; flex-direction: column; align-items: center; font-size: 12px; }
-        .nav-btn.active { color: var(--primary-color); }
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            cursor: pointer;
+            font-size: 12px;
+            color: #94a3b8;
+        }
+
+        .nav-item.active { color: var(--primary); font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <main class="content-area">
-        <section id="ana-ekran" class="active">
+    <div class="container">
+        <section id="home" class="active">
             <div class="card">
-                <h1 style="color: var(--primary-color);">FAVORİ PDF</h1>
-                <p>Dosyayı indirmek için indirme butonuna basın ve reklamın bitmesini bekleyin.</p>
+                <h1>FAVORİ PDF</h1>
+                <p>345 Yayınları Erken Erişim Denemesi aşağıdadır. İndirmek için reklamı sonuna kadar izleyin.</p>
             </div>
         </section>
 
-        <section id="pdfler">
+        <section id="pdfs">
             <div class="card">
-                <h3>Dosya Listesi</h3>
-                <div class="pdf-list-item">
+                <h3>YKS Denemeleri</h3>
+                <div class="pdf-item">
                     <div>
-                        <strong>345 TYT Deneme 2025-2026</strong>
-                        <p style="font-size: 12px; color: gray;">Boyut: PDF</p>
+                        <strong>345 TYT Deneme (2025-2026)</strong>
+                        <div style="font-size:11px; color:#64748b">Format: PDF</div>
                     </div>
                 </div>
-                
-                <button class="btn-download-action" onclick="reklamliIndir('tgerkenerisim345endenemetgtyt_2025_2026(1)')">
-                    📥 Reklam İzle ve İndir
+                <button id="mainBtn" class="btn-download" onclick="triggerAd()">
+                    🎬 Reklam İzle ve PDF İndir
                 </button>
             </div>
         </section>
 
-        <section id="profil">
+        <section id="profile">
             <div class="card">
-                <h3>İstatistiklerim</h3>
-                <p>İndirilen PDF: <strong id="stat-indir">0</strong></p>
+                <h3>İstatistikler</h3>
+                <p>Başarıyla İndirilen: <span id="count">0</span></p>
             </div>
         </section>
-    </main>
+    </div>
 
     <nav class="nav-bar">
-        <div class="nav-btn active" onclick="sekmeDegistir('ana-ekran', this)"><span>🏠</span><span>Ana Ekran</span></div>
-        <div class="nav-btn" onclick="sekmeDegistir('pdfler', this)"><span>📄</span><span>PDF'ler</span></div>
-        <div class="nav-btn" onclick="sekmeDegistir('profil', this)"><span>👤</span><span>Profilim</span></div>
+        <div class="nav-item active" onclick="showSection('home', this)">🏠<br>Ana Ekran</div>
+        <div class="nav-item" onclick="showSection('pdfs', this)">📄<br>PDF'ler</div>
+        <div class="nav-item" onclick="showSection('profile', this)">👤<br>Profilim</div>
     </nav>
 
     <script>
-        // Verileri Yükle
-        let totalDownloads = localStorage.getItem('totalDownloads') || 0;
-        document.getElementById('stat-indir').innerText = totalDownloads;
-
-        function sekmeDegistir(id, btn) {
+        // Sayfa Değiştirme
+        function showSection(id, el) {
             document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            el.classList.add('active');
         }
 
-        // --- REKLAM VE İNDİRME MANTIĞI ---
-        function reklamliIndir(dosyaAdi) {
-            console.log("Reklam başlatılıyor...");
+        // Yerel Veri Yükleme
+        let downloads = localStorage.getItem('pdf_count') || 0;
+        document.getElementById('count').innerText = downloads;
 
-            // Senin gönderdiğin Reklam API Kodu
-            show_10371617('pop').then(() => {
-                // Reklam başarıyla izlendiğinde burası çalışır
-                gercekIndirme(dosyaAdi);
-            }).catch(e => {
-                // Hata durumunda uyarı ver
-                alert("Reklam yüklenemedi veya yarıda kesildi. Lütfen tekrar deneyin.");
-                console.error("Reklam hatası:", e);
-            });
+        // --- REKLAM TETİKLEME ---
+        function triggerAd() {
+            const btn = document.getElementById('mainBtn');
+            btn.innerText = "Reklam Yükleniyor...";
+            btn.disabled = true;
+
+            // show_10371617 fonksiyonunun var olup olmadığını kontrol et (Hata almamak için)
+            if (typeof show_10371617 === 'function') {
+                show_10371617('pop').then(() => {
+                    // Kullanıcı reklamı başarıyla izledi
+                    startDownload();
+                    btn.innerText = "🎬 Reklam İzle ve PDF İndir";
+                    btn.disabled = false;
+                }).catch(e => {
+                    alert("Reklam hatası oluştu veya reklam kapatıldı.");
+                    btn.innerText = "Tekrar Dene";
+                    btn.disabled = false;
+                });
+            } else {
+                // Eğer reklam scripti yüklü değilse uyarı ver (Geliştirme aşaması için)
+                alert("Hata: Reklam kütüphanesi yüklenemedi. Lütfen reklam script linkini HTML'e ekleyin.");
+                btn.innerText = "Hata: Script Yok";
+                btn.disabled = false;
+            }
         }
 
-        function gercekIndirme(dosyaAdi) {
-            // 1. İndirmeyi Başlat
+        function startDownload() {
+            const fileName = "tgerkenerisim345endenemetgtyt_2025_2026(1).pdf";
             const link = document.createElement('a');
-            link.href = dosyaAdi + ".pdf";
-            link.download = dosyaAdi + ".pdf";
+            link.href = fileName;
+            link.download = fileName;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
-            // 2. İstatistikleri Güncelle
-            totalDownloads++;
-            localStorage.setItem('totalDownloads', totalDownloads);
-            document.getElementById('stat-indir').innerText = totalDownloads;
-
-            alert("Ödül kazanıldı: PDF İndiriliyor!");
+            // Sayaç güncelle
+            downloads++;
+            localStorage.setItem('pdf_count', downloads);
+            document.getElementById('count').innerText = downloads;
+            alert("Harika! İndirme başladı.");
         }
     </script>
 </body>
